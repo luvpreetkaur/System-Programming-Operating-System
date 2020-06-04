@@ -1,0 +1,68 @@
+// Experiment No.10 
+// Aim: System Call
+// Name:Luvpreet Kaur
+        
+
+  
+#include <unistd.h>     
+#include <sys/types.h>  
+#include <errno.h>      
+#include <stdio.h>      
+#include <sys/wait.h>   
+#include <stdlib.h>     
+ 
+int main()
+{
+    pid_t childpid;
+    int status;     
+    childpid = fork();
+    
+    if (childpid >= 0) 
+    {
+    	if (childpid == 0)       
+	{
+     		printf("CHILD: I am the child process!\n");
+          	printf("CHILD: Here's my PID: %d\n", getpid());
+           printf("CHILD: My parent's PID is: %d\n",getppid());
+          	printf("CHILD: Sleeping for 1 second...\n");	
+	    	sleep(1); 
+      	printf("Child: Now, I woke up and am executing date command \n\n");
+      	execl("/bin/date", "date", 0, (char*)0);
+           perror("execl() failure!\n\n");
+
+        }
+        else 
+        {
+        	printf("PARENT: I am the parent process!\n");
+          	printf("PARENT: Here's my PID: %d\n", getpid());
+	     printf("PARENT: The value of my copy of childpid is %d\n", childpid);
+          printf("PARENT: I will now wait for my child to exit.\n");
+          wait(&status); 
+          printf("PARENT: Child's exit code is: %d\n",
+WEXITSTATUS(status));
+          printf("PARENT: Goodbye!\n");             
+          exit(0);         
+        }
+    }
+    else     
+	{
+    		perror("fork"); 
+        	exit(0); 
+    	}
+}
+
+/*OUTPUT
+PARENT: I am the parent process!
+PARENT: Here's my PID: 1756
+PARENT: The value of my copy of childpid is 1757
+PARENT: I will now wait for my child to exit.
+CHILD: I am the child process!
+CHILD: Here's my PID: 1757
+CHILD: My parent's PID is: 1756
+CHILD: Sleeping for 1 second...
+Child: Now, I woke up and am executing date command 
+
+Mon Sep 15 07:34:15 IST 2014
+PARENT: Child's exit code is: 0
+PARENT: Goodbye!
+*/

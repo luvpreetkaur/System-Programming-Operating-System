@@ -1,0 +1,12 @@
+//Input Macro Pass 1
+
+MACRO
+ADD  &A,&B  //mnt
+MOVER A,B   //mdt
+ADD A,B     //mdt
+MEND
+START 200
+READ N
+READ M
+ADD N,M
+END
